@@ -35,10 +35,7 @@
             this.bgImg.src = 'img/bg.png';
             this.heroImg.src = 'img/hero.png';
             this.monsterImg.src = 'img/monster.png';
-            this.bgImg.onload = () => {
-                this.bgImgReady = true;
-                this.ctx.drawImage(this.bgImg,0,0);
-            };
+            this.bgImg.onload = () => this.bgImgReady = true;
             this.heroImg.onload = () => this.heroImgReady = true;
             this.monsterImg.onload = () => this.monsterImgReady = true;
             return this;
@@ -85,11 +82,35 @@
                 this.hero.y += 5;
             }
 
+            //如果抓到怪物，重置
+            if(this.hero.x+32 >= this.monster.x &&
+                this.hero.x <= this.monster.x+32 &&
+                this.hero.y+32 >= this.monster.y &&
+                this.hero.y <= this.monster.y+32
+            ){
+                this.killCount++;
+                this.reset();
+            }
 
+            if(this.hero.x < 0){
+                this.hero.x = 512-32;
+            }
+            if(this.hero.x+32 > 512){
+                this.hero.x = 0;
+            }
+            if(this.hero.y < 0){
+                this.hero.y = 480-32;
+            }
+            if(this.hero.y+32 > 480){
+                this.hero.y = 0;
+            }
             return this;
         }
 
         render(){
+            if(this.heroImgReady){
+                this.ctx.drawImage(this.bgImg,0,0);
+            }
             if(this.heroImgReady){
                 this.ctx.drawImage(this.heroImg,this.hero.x,this.hero.y);
             }
