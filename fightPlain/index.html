@@ -92,6 +92,33 @@
         #canvas{
             display: none;
         }
+        #standings{
+            width: 80%;
+            background-color: #ddd;
+            text-align: center;
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            border: 2px solid #000;
+            border-radius: 5px;
+            line-height: 2.5rem;
+            display: none;
+        }
+        #standings header{
+            font-size: 1.2rem;
+        }
+        #score{
+            line-height: 4rem;
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+        }
+        #standings button{
+            margin: 10px 0;
+            padding: 3px 5px 3px 5px;
+            border: 2px solid #000;
+            border-radius: 10px;
+            outline: none;
+        }
     </style>
 </head>
 <body>
@@ -100,6 +127,14 @@
     <div id="aboutBtn">About</div>
 </header>
 <div id="pause"></div>
+<div id="standings">
+    <header>游戏分数</header>
+    <div id="score">
+        <span id="top">记录榜:</span><span id="topScore">0</span><br/>
+        <span id="now">当前分数:</span><span id="nowScore">0</span>
+    </div>
+    <button>continue</button>
+</div>
 <canvas id="canvas"></canvas>
 <script src="result/games.js"></script>
 </body>

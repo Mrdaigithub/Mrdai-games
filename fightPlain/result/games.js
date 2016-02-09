@@ -15,7 +15,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         aboutBtn = DOC.getElementById('aboutBtn'),
         welcome = DOC.getElementById('welcome'),
         pause = DOC.getElementById('pause'),
-        pauseStatus = true;
+        standings = DOC.getElementById('standings'),
+        pauseStatus = true,
+        stop = null;
 
     canvas.width = DOC.body.clientWidth;
     canvas.height = DOC.body.clientHeight;
@@ -25,7 +27,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
 
     aboutBtn.addEventListener('touchstart', function () {
-        alert('Mrdai倾情制作~');
+        alert('Mrdai 倾情制作~');
     }, false);
 
     pause.addEventListener('touchend', function () {
@@ -71,7 +73,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 dieStatus: false,
                 animationTime: 200,
                 animation: function animation() {
-                    if (!_this.dieStatus) {
+                    if (!_this.player.dieStatus) {
                         //正常动画
                         setTimeout(function () {
                             if (that.player.count === 1) {
@@ -104,9 +106,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                                     that.player.sY = that.player.diePos[2].y;
                                     that.player.dieCount++;
                                     break;
+                                case 3:
+                                    WIN.cancelAnimationFrame(stop);
+                                    that.player.dieCount++;
+                                    break;
                                 default:
-                                    //gameOver!
-                                    //还没写
+                                    standings.style.display = 'block';
                                     break;
                             }
                             that.player.animation();
@@ -122,11 +127,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             //子弹
             this.bullet = {
-                speed: 10,
+                speed: 15,
                 interval: 100,
                 power: 10,
                 //子弹对象池
-                dataPound: [{ x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }],
+                dataPound: [{ x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }, { x: this.player.x, y: this.player.y, status: false }],
 
                 //找到第一个未启用的子弹
                 useBullet: function useBullet() {
@@ -142,7 +147,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }
                 },
 
-                //移动子弹
+                //移动子弹.
                 moveBullet: function moveBullet() {
                     //找到所有启动的子弹作位移
                     for (var i = 0; i < this.dataPound.length; i++) {
@@ -162,37 +167,152 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             //敌军
             this.enemy = {
+                animationTime: 200,
+                //简单的敌人
                 simpleEnemy: {
-                    speed: 6,
-                    hp: 30,
+                    speed: 4,
+                    hp: 50,
                     score: 100,
-                    dataPound: [{ x: 0, y: 0, status: false }],
-                    diePos: [{ x: 50, y: 658 }, { x: 420, y: 760 }, { x: 470, y: 750 }],
-                    sX: 82,
-                    sY: 658,
-                    dieCount: 0,
-                    animationTime: 200,
-                    animation: function animation() {
-                        //死亡爆炸动画
-                        setTimeout(function () {
-                            switch (that.enemy.dieCount) {
-                                case 0:
-                                    that.enemy.dieCount++;
-                                    break;
-                                case 1:
-                                    that.enemy.dieCount++;
-                                    break;
-                                case 2:
-                                    that.enemy.dieCount++;
-                                    break;
-                                default:
-                                    //gameOver!
-                                    //还没写
-                                    break;
-                            }
-                            that.enemy.animation();
-                        }, that.enemy.animationTime);
+                    dataPound: [{ x: Math.random() * this.canvas.width * 90 % +10, y: -2, sX: 82, sY: 658, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width * 90 % +10, y: -2, sX: 82, sY: 658, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width * 90 % +10, y: -2, sX: 82, sY: 658, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width * 90 % +10, y: -2, sX: 82, sY: 658, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width * 90 % +10, y: -2, sX: 82, sY: 658, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width * 90 % +10, y: -2, sX: 82, sY: 658, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width * 90 % +10, y: -2, sX: 82, sY: 658, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width * 90 % +10, y: -2, sX: 82, sY: 658, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width * 90 % +10, y: -2, sX: 82, sY: 658, displayStatus: false, dieStatus: false }],
+                    diePos: [{ x: 50, y: 658 }, { x: 420, y: 734 }, { x: 475, y: 723 }],
+                    dieCount: 0
+                },
+                //中等难度的敌人
+                middleEnemy: {
+                    speed: 3,
+                    hp: 100,
+                    score: 200,
+                    dataPound: [{ x: Math.random() * this.canvas.width, y: 0, sX: -60, sY: 570, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: 0, sX: -60, sY: 570, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: 0, sX: -60, sY: 570, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: 0, sX: -60, sY: 570, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: 0, sX: -60, sY: 570, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: 0, sX: -60, sY: 570, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: 0, sX: -60, sY: 570, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: 0, sX: -60, sY: 570, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: 0, sX: -60, sY: 570, displayStatus: false, dieStatus: false }],
+                    diePos: [{ x: 430, y: 540 }, { x: 430, y: 600 }, { x: 430, y: 480 }],
+                    dieCount: 0
+                },
+                //困难的敌人
+                hardEnemy: {
+                    speed: 1,
+                    hp: 500,
+                    score: 500,
+                    dataPound: [{ x: Math.random() * this.canvas.width, y: -165, sX: 220, sY: 850, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: -165, sX: 220, sY: 850, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: -165, sX: 220, sY: 850, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: -165, sX: 220, sY: 850, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: -165, sX: 220, sY: 850, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: -165, sX: 220, sY: 850, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: -165, sX: 220, sY: 850, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: -165, sX: 220, sY: 850, displayStatus: false, dieStatus: false }, { x: Math.random() * this.canvas.width, y: -165, sX: 220, sY: 850, displayStatus: false, dieStatus: false }],
+                    diePos: [{ x: 0, y: 750 }, { x: 320, y: 170 }, { x: 320, y: 340 }, { x: 320, y: 0 }],
+                    dieCount: 0
+                },
+                //死亡爆炸动画
+                animation: function animation(i, level) {
+                    var levelEnemy = 'simpleEnemy';
+                    switch (level) {
+                        case 0:
+                            levelEnemy = 'simpleEnemy';
+                            break;
+                        case 1:
+                            levelEnemy = 'middleEnemy';
+                            break;
+                        case 2:
+                            levelEnemy = 'hardEnemy';
+                            break;
                     }
+                    setTimeout(function () {
+                        switch (that.enemy[levelEnemy].dieCount) {
+                            case 0:
+                                that.enemy[levelEnemy].dataPound[i].dieStatus = false;
+                                that.enemy[levelEnemy].dataPound[i].sX = that.enemy[levelEnemy].diePos[0].x;
+                                that.enemy[levelEnemy].dataPound[i].sY = that.enemy[levelEnemy].diePos[0].y;
+                                that.enemy[levelEnemy].dieCount++;
+                                break;
+                            case 1:
+                                that.enemy[levelEnemy].dataPound[i].sX = that.enemy[levelEnemy].diePos[1].x;
+                                that.enemy[levelEnemy].dataPound[i].sY = that.enemy[levelEnemy].diePos[1].y;
+                                that.enemy[levelEnemy].dieCount++;
+                                break;
+                            case 2:
+                                that.enemy[levelEnemy].dataPound[i].sX = that.enemy[levelEnemy].diePos[2].x;
+                                that.enemy[levelEnemy].dataPound[i].sY = that.enemy[levelEnemy].diePos[2].y;
+                                that.enemy[levelEnemy].dieCount++;
+                                break;
+                            default:
+                                that.enemy[levelEnemy].dataPound[i].displayStatus = false;
+                                that.enemy[levelEnemy].dieCount = 0;
+                                break;
+                        }
+                        that.enemy.animation(i, 0);
+                    }, that.enemy.animationTime);
+                },
+                createEnemy: function createEnemy() {
+                    var num = Math.floor(Math.random() * 10);
+                    if (num === 0 || num === 1 || num === 2 || num === 3 || num === 4 || num === 5 || num === 6) {
+                        //出现简单敌人
+                        for (var i = 0; i < _this.enemy.simpleEnemy.dataPound.length; i++) {
+                            if (!_this.enemy.simpleEnemy.dataPound[i].displayStatus && !_this.enemy.simpleEnemy.dataPound[i].dieStatus) {
+                                _this.enemy.simpleEnemy.dataPound[i].displayStatus = true;
+                                _this.enemy.simpleEnemy.dataPound[i].dieStatus = true;
+                                break;
+                            }
+                        }
+                    } else if (num === 7 || num === 8) {
+                        //出现中等敌人
+                        for (var i = 0; i < _this.enemy.middleEnemy.dataPound.length; i++) {
+                            if (!_this.enemy.middleEnemy.dataPound[i].displayStatus && !_this.enemy.middleEnemy.dataPound[i].dieStatus) {
+                                _this.enemy.middleEnemy.dataPound[i].displayStatus = true;
+                                _this.enemy.middleEnemy.dataPound[i].dieStatus = true;
+                                break;
+                            }
+                        }
+                    } else if (num === 9) {
+                        //出现困难敌人
+                        for (var i = 0; i < _this.enemy.hardEnemy.dataPound.length; i++) {
+                            if (!_this.enemy.hardEnemy.dataPound[i].displayStatus && !_this.enemy.hardEnemy.dataPound[i].dieStatus) {
+                                _this.enemy.hardEnemy.dataPound[i].displayStatus = true;
+                                _this.enemy.hardEnemy.dataPound[i].dieStatus = true;
+                                break;
+                            }
+                        }
+                    }
+                    setTimeout(function () {
+                        that.enemy.createEnemy();
+                    }, 1000);
+                },
+                moveEnemy: function moveEnemy() {
+                    for (var i = 0; i < _this.enemy.simpleEnemy.dataPound.length; i++) {
+                        if (_this.enemy.simpleEnemy.dataPound[i].dieStatus) {
+                            _this.enemy.simpleEnemy.dataPound[i].y += _this.enemy.simpleEnemy.speed;
+                        }
+                    }
+                    for (var i = 0; i < _this.enemy.middleEnemy.dataPound.length; i++) {
+                        if (_this.enemy.middleEnemy.dataPound[i].dieStatus) {
+                            _this.enemy.middleEnemy.dataPound[i].y += _this.enemy.middleEnemy.speed;
+                        }
+                    }
+                    for (var i = 0; i < _this.enemy.hardEnemy.dataPound.length; i++) {
+                        if (_this.enemy.hardEnemy.dataPound[i].dieStatus) {
+                            _this.enemy.hardEnemy.dataPound[i].y += _this.enemy.hardEnemy.speed;
+                        }
+                    }
+                },
+                resetEnemy: function resetEnemy(count, level) {
+                    var levelEnemy = null;
+                    switch (level) {
+                        case 0:
+                            levelEnemy = 'simpleEnemy';
+                            _this.enemy[levelEnemy].dataPound[count].x = Math.random() * _this.canvas.width;
+                            _this.enemy[levelEnemy].dataPound[count].y = -20;
+                            _this.enemy[levelEnemy].dataPound[count].sX = 82;
+                            _this.enemy[levelEnemy].dataPound[count].sY = 658;
+                            break;
+                        case 1:
+                            levelEnemy = 'middleEnemy';
+                            _this.enemy[levelEnemy].dataPound[count].x = Math.random() * _this.canvas.width;
+                            _this.enemy[levelEnemy].dataPound[count].y = -60;
+                            _this.enemy[levelEnemy].dataPound[count].sX = 0;
+                            _this.enemy[levelEnemy].dataPound[count].sY = 570;
+                            break;
+                        case 2:
+                            levelEnemy = 'hardEnemy';
+                            _this.enemy[levelEnemy].dataPound[count].x = Math.random() * _this.canvas.width;
+                            _this.enemy[levelEnemy].dataPound[count].y = -165;
+                            _this.enemy[levelEnemy].dataPound[count].sX = 220;
+                            _this.enemy[levelEnemy].dataPound[count].sY = 850;
+                            break;
+                    }
+                    _this.enemy[levelEnemy].dataPound[count].dieStatus = false;
+                    _this.enemy[levelEnemy].dataPound[count].displayStatus = false;
                 }
             };
             that = this;
@@ -224,6 +344,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                             var e = WIN.event || event;
                             _this2.pos.x = e.targetTouches[0].clientX;
                             _this2.pos.y = e.targetTouches[0].clientY;
+                            if (_this2.pos.x < 32) {
+                                _this2.pos.x = 32;
+                            }
+                            if (_this2.pos.y < 55) {
+                                _this2.pos.y = 55;
+                            }
+                            if (_this2.pos.x > _this2.canvas.width - 32) {
+                                _this2.pos.x = _this2.canvas.width - 32;
+                            }
+                            if (_this2.pos.y > _this2.canvas.height - 25) {
+                                _this2.pos.y = _this2.canvas.height - 25;
+                            }
                         }, false);
                     }
             }
@@ -239,6 +371,87 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     return _this3.bg.ready = true;
                 };
             }
+
+            //碰撞检测
+
+            //检测player是否撞到敌机
+
+        }, {
+            key: 'isPlayerDie',
+            value: function isPlayerDie() {
+                for (var i = 0; i < this.enemy.simpleEnemy.dataPound.length; i++) {
+                    if (this.enemy.simpleEnemy.dataPound[i].dieStatus) {
+                        if (this.player.x <= this.enemy.simpleEnemy.dataPound[i].x + 30 && this.player.x + 64 >= this.enemy.simpleEnemy.dataPound[i].x && this.player.y <= this.enemy.simpleEnemy.dataPound[i].y + 22 && this.player.y + 80 >= this.enemy.simpleEnemy.dataPound[i].y) {
+                            return true;
+                        }
+                    }
+                }
+                for (var i = 0; i < this.enemy.middleEnemy.dataPound.length; i++) {
+                    if (this.enemy.middleEnemy.dataPound[i].dieStatus) {
+                        if (this.player.x <= this.enemy.middleEnemy.dataPound[i].x + 45 && this.player.x + 64 >= this.enemy.middleEnemy.dataPound[i].x && this.player.y <= this.enemy.middleEnemy.dataPound[i].y + 57 && this.player.y + 80 >= this.enemy.middleEnemy.dataPound[i].y) {
+                            return true;
+                        }
+                    }
+                }
+                for (var i = 0; i < this.enemy.hardEnemy.dataPound.length; i++) {
+                    if (this.enemy.hardEnemy.dataPound[i].dieStatus) {
+                        if (this.player.x <= this.enemy.hardEnemy.dataPound[i].x + 110 && this.player.x + 64 >= this.enemy.hardEnemy.dataPound[i].x && this.player.y <= this.enemy.hardEnemy.dataPound[i].y + 170 && this.player.y + 80 >= this.enemy.hardEnemy.dataPound[i].y) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            //检测子弹是否打中敌机
+
+        }, {
+            key: 'isEnemyDie',
+            value: function isEnemyDie(level) {
+                var max = {
+                    count: null,
+                    maxPosY: 10000
+                },
+                    obj = {
+                    bool: false,
+                    count: null
+                },
+                    levelEnemy = 'simpleEnemy';
+                switch (level) {
+                    case 0:
+                        levelEnemy = 'simpleEnemy';
+                        break;
+                    case 1:
+                        levelEnemy = 'middleEnemy';
+                        break;
+                    case 2:
+                        levelEnemy = 'hardEnemy';
+                        break;
+                }
+                //找到最前方的子弹
+                for (var i = 0; i < this.bullet.dataPound.length; i++) {
+                    if (this.bullet.dataPound[i].status && this.bullet.dataPound[i].y < max.maxPosY) {
+                        max.maxPosY = this.bullet.dataPound[i].y;
+                        max.count = i;
+                    }
+                }
+
+                //检测子弹和敌机的碰撞
+                for (var i = 0; i < this.enemy.simpleEnemy.dataPound.length; i++) {
+                    if (this.enemy.simpleEnemy.dataPound[i].dieStatus) {
+                        if (this.bullet.dataPound[max.count].x + 7 > this.enemy[levelEnemy].dataPound[i].x && this.bullet.dataPound[max.count].x < this.enemy[levelEnemy].dataPound[i].x + 30 && this.bullet.dataPound[max.count].y < this.enemy[levelEnemy].dataPound[i].y + 22) {
+                            this.bullet.resetBullet(max.count);
+                            obj.bool = true;
+                            obj.count = i;
+                            return obj;
+                        }
+                    }
+                }
+                return obj;
+            }
+
+            //数据变化
+
         }, {
             key: 'update',
             value: function update() {
@@ -255,10 +468,33 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 //主角位移变化
                 this.player.x = this.pos.x - 33;
                 this.player.y = this.pos.y - 55;
+                ////如果撞到敌机爆炸gameOver
+                if (this.isPlayerDie()) {
+                    this.player.dieStatus = true;
+                    this.player.animation();
+                }
 
                 //子弹位移
                 this.bullet.moveBullet();
+                //敌机位移
+                this.enemy.moveEnemy();
+                //判断子弹打到敌机
+                var obj = this.isEnemyDie();
+                if (obj.bool) {
+                    //敌机扣血
+                    this.enemy.simpleEnemy.hp -= this.bullet.power;
+                    //如果血量小于等于0，敌机爆炸
+                    if (this.enemy.simpleEnemy.hp <= 0) {
+                        //加分数
+                        this.allScore += this.enemy.simpleEnemy.score;
+                        this.enemy.simpleEnemy.dataPound[obj.count].dieStatus = false;
+                        this.enemy.animation(0);
+                    }
+                }
             }
+
+            //重绘操作
+
         }, {
             key: 'render',
             value: function render() {
@@ -287,8 +523,46 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         }
                     }
 
-                    //绘制敌机
-                    this.ctx.drawImage(this.img, this.enemy.simpleEnemy.sX, this.enemy.simpleEnemy.sY, 32, 22, this.enemy.simpleEnemy.dataPound[0].x + 50, this.enemy.simpleEnemy.dataPound[0].y + 50, 30, 22);
+                    //绘制简单敌机
+                    for (var i = 0; i < this.enemy.simpleEnemy.dataPound.length; i++) {
+                        if (this.enemy.simpleEnemy.dataPound[i].displayStatus) {
+                            //敌机飞出屏幕外回收
+                            if (this.enemy.simpleEnemy.dataPound[i].y > this.canvas.height) {
+                                this.enemy.resetEnemy(i, 0);
+                            } else {
+                                this.ctx.drawImage(this.img, this.enemy.simpleEnemy.dataPound[i].sX, this.enemy.simpleEnemy.dataPound[i].sY, 32, 25, this.enemy.simpleEnemy.dataPound[i].x, this.enemy.simpleEnemy.dataPound[i].y, 32, 25);
+                            }
+                        }
+                    }
+                    //绘制中等敌机
+                    for (var i = 0; i < this.enemy.middleEnemy.dataPound.length; i++) {
+                        if (this.enemy.middleEnemy.dataPound[i].displayStatus) {
+                            //敌机飞出屏幕外回收
+                            if (this.enemy.middleEnemy.dataPound[i].y > this.canvas.height) {
+                                this.enemy.resetEnemy(i, 1);
+                            } else {
+                                this.ctx.drawImage(this.img, this.enemy.middleEnemy.dataPound[i].sX, this.enemy.middleEnemy.dataPound[i].sY, 45, 57, this.enemy.middleEnemy.dataPound[i].x, this.enemy.middleEnemy.dataPound[i].y, 45, 57);
+                            }
+                        }
+                    }
+                    //绘制困难敌机
+                    for (var i = 0; i < this.enemy.hardEnemy.dataPound.length; i++) {
+                        if (this.enemy.hardEnemy.dataPound[i].displayStatus) {
+                            //敌机飞出屏幕外回收
+                            if (this.enemy.hardEnemy.dataPound[i].y > this.canvas.height) {
+                                this.enemy.resetEnemy(i, 2);
+                            } else {
+                                this.ctx.drawImage(this.img, this.enemy.hardEnemy.dataPound[i].sX, this.enemy.hardEnemy.dataPound[i].sY, 110, 170, this.enemy.hardEnemy.dataPound[i].x, this.enemy.hardEnemy.dataPound[i].y, 110, 170);
+                            }
+                        }
+                    }
+
+                    //绘制分数信息
+                    this.ctx.fillStyle = "rgb(250, 250, 250)";
+                    this.ctx.font = "20px Helvetica";
+                    this.ctx.textAlign = "left";
+                    this.ctx.textBaseline = "top";
+                    this.ctx.fillText("score: " + this.allScore, 60, 20);
                 }
             }
         }, {
@@ -296,7 +570,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function main() {
                 that.update();
                 that.render();
-                requestAnimationFrame(function () {
+                stop = requestAnimationFrame(function () {
                     that.main();
                 });
             }
@@ -310,6 +584,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 this.loadImg();
                 this.player.animation();
                 this.bullet.useBullet();
+                this.enemy.createEnemy();
                 this.main();
             }
         }]);
