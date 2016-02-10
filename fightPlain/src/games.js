@@ -10,6 +10,9 @@
         welcome = DOC.getElementById('welcome'),
         pause = DOC.getElementById('pause'),
         standings = DOC.getElementById('standings'),
+        topRank = DOC.getElementById('topRank'),
+        nowRank = DOC.getElementById('nowRank'),
+        continueBtn = DOC.getElementById('continue'),
         pauseStatus = true,
         stop = null;
 
@@ -21,7 +24,7 @@
     };
 
     aboutBtn.addEventListener('touchstart', ()=>{
-        alert('Mrdai 倾情制作~');
+        alert('本作品由Mrdai独立完成');
     },false);
 
     pause.addEventListener('touchend',  ()=>{
@@ -40,11 +43,12 @@
         constructor(canvas,ctx){
             this.canvas = canvas;
             this.ctx = ctx;
-            this.allScore = 0;
+            this.nowRank = 0;
+            this.topRank = 0;
             this.gameStatus = false;
             this.gravityMode = false;
             this.img = new Image();
-            this.img.src = '../img/gameArts.png';
+            this.img.src = 'img/gameArts.png';
 
             this.bg = {
                 speed:2,
@@ -104,7 +108,7 @@
                                     break;
                                 default :
                                     standings.style.display = 'block';
-                                    break;
+                                    return 0;
                             }
                             that.player.animation();
                         },that.player.animationTime);
@@ -173,59 +177,60 @@
 
             //敌军
             this.enemy = {
-                animationTime:200,
+                animationTime:150,
                 //简单的敌人
                 simpleEnemy:{
-                    speed:1,
-                    score:100,
+                    speed:4,
+                    score:50,
                     dataPound:[
-                        {x:Math.random()*this.canvas.width+20,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width+20,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width+20,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width+20,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width+20,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width+20,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width+20,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width+20,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width+20,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false}
+                        {x:Math.random()*(this.canvas.width+40)-40,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width+40)-40,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width+40)-40,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width+40)-40,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width+40)-40,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width+40)-40,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width+40)-40,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width+40)-40,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width+40)-40,y:-2,sX:82,sY:658,hp:50,displayStatus:false,dieStatus:false}
                     ],
                     diePos:[{x:50,y:658},{x:420,y:734},{x:475,y:723}],
                     dieCount:0
                 },
                 //中等难度的敌人
                 middleEnemy:{
-                    speed:3,hp:100,
+                    speed:2,
                     score:200,
                     dataPound:[
-                        {x:Math.random()*this.canvas.width,y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false}
+                        {x:Math.random()*(this.canvas.width-45),y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-45),y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-45),y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-45),y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-45),y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-45),y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-45),y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-45),y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-45),y:-60,sX:0,sY:570,hp:100,displayStatus:false,dieStatus:false}
                     ],
                     diePos:[{x:430,y:540},{x:430,y:600},{x:430,y:480}],
                     dieCount:0
                 },
                 //困难的敌人
                 hardEnemy:{
-                    speed:1,hp:500,
+                    speed:1,
                     score:500,
                     dataPound:[
-                        {x:Math.random()*this.canvas.width,y:-165,sX:220,sY:850,hp:300,dieCount:0,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-165,sX:220,sY:850,hp:300,dieCount:0,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-165,sX:220,sY:850,hp:300,dieCount:0,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-165,sX:220,sY:850,hp:300,dieCount:0,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-165,sX:220,sY:850,hp:300,dieCount:0,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-165,sX:220,sY:850,hp:300,dieCount:0,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-165,sX:220,sY:850,hp:300,dieCount:0,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-165,sX:220,sY:850,hp:300,dieCount:0,displayStatus:false,dieStatus:false},
-                        {x:Math.random()*this.canvas.width,y:-165,sX:220,sY:850,hp:300,dieCount:0,displayStatus:false,dieStatus:false}
+                        {x:Math.random()*(this.canvas.width-110),y:-165,sX:220,sY:850,hp:300,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-110),y:-165,sX:220,sY:850,hp:300,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-110),y:-165,sX:220,sY:850,hp:300,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-110),y:-165,sX:220,sY:850,hp:300,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-110),y:-165,sX:220,sY:850,hp:300,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-110),y:-165,sX:220,sY:850,hp:300,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-110),y:-165,sX:220,sY:850,hp:300,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-110),y:-165,sX:220,sY:850,hp:300,displayStatus:false,dieStatus:false},
+                        {x:Math.random()*(this.canvas.width-110),y:-165,sX:220,sY:850,hp:300,displayStatus:false,dieStatus:false}
                     ],
-                    diePos:[{x:0,y:750},{x:320,y:340},{x:320,y:0}],dieCount:0
+                    diePos:[{x:0,y:750},{x:320,y:340},{x:320,y:0}],
+                    dieCount:0
                 },
 
                 //死亡爆炸动画
@@ -243,22 +248,22 @@
                             break;
                     }
                     setTimeout(()=> {
-                        switch (that.enemy[levelEnemy].dataPound[i].dieCount){
+                        switch (that.enemy[levelEnemy].dieCount){
                             case 0:
                                 that.enemy[levelEnemy].dataPound[i].dieStatus = false;
                                 that.enemy[levelEnemy].dataPound[i].sX = that.enemy[levelEnemy].diePos[0].x;
                                 that.enemy[levelEnemy].dataPound[i].sY = that.enemy[levelEnemy].diePos[0].y;
-                                that.enemy[levelEnemy].dataPound[i].dieCount++;
+                                that.enemy[levelEnemy].dieCount++;
                                 break;
                             case 1:
                                 that.enemy[levelEnemy].dataPound[i].sX = that.enemy[levelEnemy].diePos[1].x;
                                 that.enemy[levelEnemy].dataPound[i].sY = that.enemy[levelEnemy].diePos[1].y;
-                                that.enemy[levelEnemy].dataPound[i].dieCount++;
+                                that.enemy[levelEnemy].dieCount++;
                                 break;
                             case 2:
                                 that.enemy[levelEnemy].dataPound[i].sX = that.enemy[levelEnemy].diePos[2].x;
                                 that.enemy[levelEnemy].dataPound[i].sY = that.enemy[levelEnemy].diePos[2].y;
-                                that.enemy[levelEnemy].dataPound[i].dieCount++;
+                                that.enemy[levelEnemy].dieCount++;
                                 break;
                             default :
                                 that.enemy.resetEnemy(i,level);
@@ -269,7 +274,7 @@
                 },
                 createEnemy:()=>{
                     let num = Math.floor(Math.random()*10);
-                    if(false){
+                    if(num===0 || num===1 || num===2 || num===3 || num===4 || num===5 ||num===6){
                         //出现简单敌人
                         for(let i=0; i<this.enemy.simpleEnemy.dataPound.length; i++){
                             if(!this.enemy.simpleEnemy.dataPound[i].displayStatus){
@@ -278,7 +283,7 @@
                                 break;
                             }
                         }
-                    }else if(num===0 || num===1 || num===2 || num===3 || num===4 || num===5 ||num===6 || num===7 || num===8||num === 9){
+                    }else if(num===7 || num===8){
                         //出现中等敌人
                         for(let i=0; i<this.enemy.middleEnemy.dataPound.length; i++){
                             if(!this.enemy.middleEnemy.dataPound[i].displayStatus){
@@ -287,11 +292,10 @@
                                 break;
                             }
                         }
-                    }else if(false){
+                    }else if(num === 9){
                         //出现困难敌人
                         for(let i=0; i<this.enemy.hardEnemy.dataPound.length; i++){
-                            if(!this.enemy.hardEnemy.dataPound[i].displayStatus &&
-                                !this.enemy.hardEnemy.dataPound[i].dieStatus){
+                            if(!this.enemy.hardEnemy.dataPound[i].displayStatus){
                                 this.enemy.hardEnemy.dataPound[i].displayStatus = true;
                                 this.enemy.hardEnemy.dataPound[i].dieStatus = true;
                                 break;
@@ -324,7 +328,7 @@
                     switch (level){
                         case 0:
                             levelEnemy = 'simpleEnemy';
-                            this.enemy[levelEnemy].dataPound[count].x = Math.random()*this.canvas.width;
+                            this.enemy[levelEnemy].dataPound[count].x = Math.random()*(this.canvas.width-32);
                             this.enemy[levelEnemy].dataPound[count].y = -20;
                             this.enemy[levelEnemy].dataPound[count].sX = 82;
                             this.enemy[levelEnemy].dataPound[count].sY = 658;
@@ -332,22 +336,22 @@
                             break;
                         case 1:
                             levelEnemy = 'middleEnemy';
-                            this.enemy[levelEnemy].dataPound[count].x = Math.random()*this.canvas.width;
+                            this.enemy[levelEnemy].dataPound[count].x = Math.random()*(this.canvas.width-45);
                             this.enemy[levelEnemy].dataPound[count].y = -60;
                             this.enemy[levelEnemy].dataPound[count].sX = 0;
                             this.enemy[levelEnemy].dataPound[count].sY = 570;
-                            this.enemy[levelEnemy].dataPound[count].hp = 150;
+                            this.enemy[levelEnemy].dataPound[count].hp = 100;
                             break;
                         case 2:
                             levelEnemy = 'hardEnemy';
-                            this.enemy[levelEnemy].dataPound[count].x = Math.random()*this.canvas.width;
+                            this.enemy[levelEnemy].dataPound[count].x = Math.random()*(this.canvas.width-110);
                             this.enemy[levelEnemy].dataPound[count].y = -165;
                             this.enemy[levelEnemy].dataPound[count].sX = 220;
                             this.enemy[levelEnemy].dataPound[count].sY = 850;
                             this.enemy[levelEnemy].dataPound[count].hp = 300;
                             break;
                     }
-                    this.enemy[levelEnemy].dataPound[count].dieCount = 0;
+                    this.enemy[levelEnemy].dieCount = 0;
                     this.enemy[levelEnemy].dataPound[count].dieStatus = false;
                     this.enemy[levelEnemy].dataPound[count].displayStatus = false;
                 }
@@ -374,6 +378,10 @@
             }else{
 
                 //普通模式
+                addEventListener('touchstart',(event)=>{
+                    let e = WIN.event || event;
+                    e.preventDefault();
+                },false);
                 addEventListener('touchmove',(event)=>{
                     let e = WIN.event || event;
                     this.pos.x = e.targetTouches[0].clientX;
@@ -405,16 +413,16 @@
 
         //检测player是否撞到敌机
         isPlayerDie(){
-            //for(let i=0; i<this.enemy.simpleEnemy.dataPound.length; i++){
-            //    if(this.enemy.simpleEnemy.dataPound[i].dieStatus){
-            //        if(this.player.x <= this.enemy.simpleEnemy.dataPound[i].x+30 &&
-            //            this.player.x+64 >= this.enemy.simpleEnemy.dataPound[i].x &&
-            //            this.player.y <= this.enemy.simpleEnemy.dataPound[i].y+22 &&
-            //            this.player.y+80 >= this.enemy.simpleEnemy.dataPound[i].y){
-            //            return true;
-            //        }
-            //    }
-            //}
+            for(let i=0; i<this.enemy.simpleEnemy.dataPound.length; i++){
+                if(this.enemy.simpleEnemy.dataPound[i].dieStatus){
+                    if(this.player.x <= this.enemy.simpleEnemy.dataPound[i].x+30 &&
+                        this.player.x+64 >= this.enemy.simpleEnemy.dataPound[i].x &&
+                        this.player.y <= this.enemy.simpleEnemy.dataPound[i].y+22 &&
+                        this.player.y+80 >= this.enemy.simpleEnemy.dataPound[i].y){
+                        return true;
+                    }
+                }
+            }
             for(let i=0; i<this.enemy.middleEnemy.dataPound.length; i++){
                 if(this.enemy.middleEnemy.dataPound[i].dieStatus){
                     if(this.player.x <= this.enemy.middleEnemy.dataPound[i].x+45 &&
@@ -425,16 +433,16 @@
                     }
                 }
             }
-            //for(let i=0; i<this.enemy.hardEnemy.dataPound.length; i++){
-            //    if(this.enemy.hardEnemy.dataPound[i].dieStatus){
-            //        if(this.player.x <= this.enemy.hardEnemy.dataPound[i].x+110 &&
-            //            this.player.x+64 >= this.enemy.hardEnemy.dataPound[i].x &&
-            //            this.player.y <= this.enemy.hardEnemy.dataPound[i].y+170 &&
-            //            this.player.y+80 >= this.enemy.hardEnemy.dataPound[i].y){
-            //            return true;
-            //        }
-            //    }
-            //}
+            for(let i=0; i<this.enemy.hardEnemy.dataPound.length; i++){
+                if(this.enemy.hardEnemy.dataPound[i].dieStatus){
+                    if(this.player.x <= this.enemy.hardEnemy.dataPound[i].x+110 &&
+                        this.player.x+64 >= this.enemy.hardEnemy.dataPound[i].x &&
+                        this.player.y <= this.enemy.hardEnemy.dataPound[i].y+170 &&
+                        this.player.y+80 >= this.enemy.hardEnemy.dataPound[i].y){
+                        return true;
+                    }
+                }
+            }
             return false;
         }
 
@@ -452,25 +460,27 @@
             }
 
             //检测子弹和敌机的碰撞
-            //for(let i=0; i<this.enemy.simpleEnemy.dataPound.length; i++){
-            //    if(this.enemy.simpleEnemy.dataPound[i].dieStatus){
-            //        if(this.bullet.dataPound[max.count].x+7 > this.enemy.simpleEnemy.dataPound[i].x &&
-            //            this.bullet.dataPound[max.count].x < this.enemy.simpleEnemy.dataPound[i].x+30 &&
-            //            this.bullet.dataPound[max.count].y < this.enemy.simpleEnemy.dataPound[i].y+22){
-            //            this.bullet.resetBullet(max.count);
-            //            obj.bool = true;
-            //            obj.count = i;
-            //            obj.levelEnemy = 'simpleEnemy';
-            //            return obj;
-            //        }
-            //    }
-            //}
+            if(!max.count){
+                max.count = 0;
+            }
+            for(let i=0; i<this.enemy.simpleEnemy.dataPound.length; i++){
+                if(this.enemy.simpleEnemy.dataPound[i].dieStatus){
+                    if(this.bullet.dataPound[max.count].x+7 > this.enemy.simpleEnemy.dataPound[i].x &&
+                        this.bullet.dataPound[max.count].x < this.enemy.simpleEnemy.dataPound[i].x+30 &&
+                        this.bullet.dataPound[max.count].y < this.enemy.simpleEnemy.dataPound[i].y+22){
+                        this.bullet.resetBullet(max.count);
+                        obj.bool = true;
+                        obj.count = i;
+                        obj.levelEnemy = 'simpleEnemy';
+                        return obj;
+                    }
+                }
+            }
             for(let i=0; i<this.enemy.middleEnemy.dataPound.length; i++){
                 if(this.enemy.middleEnemy.dataPound[i].dieStatus){
                     if(this.bullet.dataPound[max.count].x+7 > this.enemy.middleEnemy.dataPound[i].x &&
-                        this.bullet.dataPound[max.count].x < this.enemy.middleEnemy.dataPound[i].x+30 &&
-                        this.bullet.dataPound[max.count].y < this.enemy.middleEnemy.dataPound[i].y+22){
-                        console.log(0)
+                        this.bullet.dataPound[max.count].x < this.enemy.middleEnemy.dataPound[i].x+45 &&
+                        this.bullet.dataPound[max.count].y < this.enemy.middleEnemy.dataPound[i].y+57){
                         this.bullet.resetBullet(max.count);
                         obj.bool = true;
                         obj.count = i;
@@ -479,19 +489,19 @@
                     }
                 }
             }
-            //for(let i=0; i<this.enemy.hardEnemy.dataPound.length; i++){
-            //    if(this.enemy.hardEnemy.dataPound[i].dieStatus){
-            //        if(this.bullet.dataPound[max.count].x+7 > this.enemy.hardEnemy.dataPound[i].x &&
-            //            this.bullet.dataPound[max.count].x < this.enemy.hardEnemy.dataPound[i].x+30 &&
-            //            this.bullet.dataPound[max.count].y < this.enemy.hardEnemy.dataPound[i].y+22){
-            //            this.bullet.resetBullet(max.count);
-            //            obj.bool = true;
-            //            obj.count = i;
-            //            obj.levelEnemy = 'hardEnemy';
-            //            return obj;
-            //        }
-            //    }
-            //}
+            for(let i=0; i<this.enemy.hardEnemy.dataPound.length; i++){
+                if(this.enemy.hardEnemy.dataPound[i].dieStatus){
+                    if(this.bullet.dataPound[max.count].x+7 > this.enemy.hardEnemy.dataPound[i].x &&
+                        this.bullet.dataPound[max.count].x < this.enemy.hardEnemy.dataPound[i].x+110 &&
+                        this.bullet.dataPound[max.count].y < this.enemy.hardEnemy.dataPound[i].y+170){
+                        this.bullet.resetBullet(max.count);
+                        obj.bool = true;
+                        obj.count = i;
+                        obj.levelEnemy = 'hardEnemy';
+                        return obj;
+                    }
+                }
+            }
             return obj;
         }
 
@@ -511,10 +521,21 @@
             //主角位移变化
             this.player.x = this.pos.x-33;
             this.player.y = this.pos.y-55;
+
             ////如果撞到敌机爆炸gameOver
             if(this.isPlayerDie()){
                 this.player.dieStatus = true;
                 this.player.animation();
+                if(!localStorage.getItem('topRank')){
+                    localStorage.setItem('topRank',0);
+                }
+                this.topRank = localStorage.getItem('topRank');
+                if(this.topRank < this.nowRank){
+                    this.topRank = this.nowRank;
+                }
+                topRank.innerHTML = this.topRank;
+                nowRank.innerHTML = this.nowRank;
+                localStorage.setItem('topRank',this.topRank);
             }
 
             //子弹位移
@@ -529,7 +550,7 @@
                 //如果血量小于等于0，敌机爆炸
                 if(this.enemy[obj.levelEnemy].dataPound[obj.count].hp <= 0){
                     //加分数
-                    this.allScore += this.enemy[obj.levelEnemy].score;
+                    this.nowRank += this.enemy[obj.levelEnemy].score;
                     this.enemy[obj.levelEnemy].dataPound[obj.count].dieStatus = false;
                     let num = null;
                     switch (obj.levelEnemy){
@@ -588,20 +609,20 @@
                 }
 
                 //绘制简单敌机
-                //for(let i=0; i<this.enemy.simpleEnemy.dataPound.length; i++){
-                //    if(this.enemy.simpleEnemy.dataPound[i].displayStatus){
-                //        //敌机飞出屏幕外回收
-                //        if(this.enemy.simpleEnemy.dataPound[i].y > this.canvas.height){
-                //            this.enemy.resetEnemy(i,0);
-                //        }else{
-                //            this.ctx.drawImage(this.img,
-                //                this.enemy.simpleEnemy.dataPound[i].sX,
-                //                this.enemy.simpleEnemy.dataPound[i].sY, 32,25,
-                //                this.enemy.simpleEnemy.dataPound[i].x,
-                //                this.enemy.simpleEnemy.dataPound[i].y, 32,25);
-                //        }
-                //    }
-                //}
+                for(let i=0; i<this.enemy.simpleEnemy.dataPound.length; i++){
+                    if(this.enemy.simpleEnemy.dataPound[i].displayStatus){
+                        //敌机飞出屏幕外回收
+                        if(this.enemy.simpleEnemy.dataPound[i].y > this.canvas.height){
+                            this.enemy.resetEnemy(i,0);
+                        }else{
+                            this.ctx.drawImage(this.img,
+                                this.enemy.simpleEnemy.dataPound[i].sX,
+                                this.enemy.simpleEnemy.dataPound[i].sY, 32,25,
+                                this.enemy.simpleEnemy.dataPound[i].x,
+                                this.enemy.simpleEnemy.dataPound[i].y, 32,25);
+                        }
+                    }
+                }
                 //绘制中等敌机
                 for(let i=0; i<this.enemy.middleEnemy.dataPound.length; i++){
                     if(this.enemy.middleEnemy.dataPound[i].displayStatus){
@@ -618,27 +639,27 @@
                     }
                 }
                 //绘制困难敌机
-                //for(let i=0; i<this.enemy.hardEnemy.dataPound.length; i++){
-                //    if(this.enemy.hardEnemy.dataPound[i].displayStatus){
-                //        //敌机飞出屏幕外回收
-                //        if(this.enemy.hardEnemy.dataPound[i].y > this.canvas.height){
-                //            this.enemy.resetEnemy(i,2);
-                //        }else{
-                //            this.ctx.drawImage(this.img,
-                //                this.enemy.hardEnemy.dataPound[i].sX,
-                //                this.enemy.hardEnemy.dataPound[i].sY, 110,170,
-                //                this.enemy.hardEnemy.dataPound[i].x,
-                //                this.enemy.hardEnemy.dataPound[i].y, 110,170);
-                //        }
-                //    }
-                //}
+                for(let i=0; i<this.enemy.hardEnemy.dataPound.length; i++){
+                    if(this.enemy.hardEnemy.dataPound[i].displayStatus){
+                        //敌机飞出屏幕外回收
+                        if(this.enemy.hardEnemy.dataPound[i].y > this.canvas.height){
+                            this.enemy.resetEnemy(i,2);
+                        }else{
+                            this.ctx.drawImage(this.img,
+                                this.enemy.hardEnemy.dataPound[i].sX,
+                                this.enemy.hardEnemy.dataPound[i].sY, 110,170,
+                                this.enemy.hardEnemy.dataPound[i].x,
+                                this.enemy.hardEnemy.dataPound[i].y, 110,170);
+                        }
+                    }
+                }
 
                 //绘制分数信息
                 this.ctx.fillStyle = "rgb(250, 250, 250)";
                 this.ctx.font = "20px Helvetica";
                 this.ctx.textAlign = "left";
                 this.ctx.textBaseline = "top";
-                this.ctx.fillText("score: " + this.allScore, 60, 20);
+                this.ctx.fillText("score: " + this.nowRank, 60, 20);
             }
         }
 
@@ -661,14 +682,20 @@
             this.main();
         }
     }
-    let plains = (canvas,ctx) => new Plains(canvas,ctx);
-
-
-    startBtn.addEventListener('touchstart',  ()=>{
+    let plains = (canvas,ctx) => new Plains(canvas,ctx),
+        startGame = ()=>{
         welcome.style.display = 'none';
         canvas.style.display = 'block';
         pause.style.display = 'block';
         let xx = plains(canvas,ctx);
         xx.start();
-    },false);
+    },
+        toContinue = ()=>{
+            standings.style.display = 'none';
+            canvas.style.display = 'none';
+            pause.style.display = 'none';
+            welcome.style.display = 'block';
+        };
+    startBtn.addEventListener('touchstart',startGame,false);
+    continueBtn.addEventListener('touchstart',toContinue,false);
 })(document,window);
