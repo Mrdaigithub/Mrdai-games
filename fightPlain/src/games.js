@@ -55,7 +55,7 @@
                 speed:2,
                 ready:false,
                 bg1:{x:0, y:0},
-                bg2:{x:0, y:-568}
+                bg2:{x:0, y:-(this.canvas.height)}
             };
 
             this.player = {
@@ -512,11 +512,11 @@
         //数据变化
         update(){
             //变化背景数据
-            if(this.bg.bg1.y >= 568){
-                this.bg.bg1.y = -568;
+            if(this.bg.bg1.y >= 480){
+                this.bg.bg1.y = -480;
             }
-            if(this.bg.bg2.y >= 568){
-                this.bg.bg2.y = -568;
+            if(this.bg.bg2.y >= 480){
+                this.bg.bg2.y = -480;
             }
             this.bg.bg1.y += this.bg.speed;
             this.bg.bg2.y += this.bg.speed;
