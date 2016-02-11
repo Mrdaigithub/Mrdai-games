@@ -15,11 +15,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         aboutBtn = DOC.getElementById('aboutBtn'),
         welcome = DOC.getElementById('welcome'),
         pause = DOC.getElementById('pause'),
-        standings = DOC.getElementById('standings'),
+        mask = DOC.getElementById('mask'),
         topRank = DOC.getElementById('topRank'),
         nowRank = DOC.getElementById('nowRank'),
         continueBtn = DOC.getElementById('continue'),
         pauseStatus = true,
+        flag = false,
         stop = null;
 
     canvas.width = DOC.body.clientWidth;
@@ -53,7 +54,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             this.ctx = ctx;
             this.nowRank = 0;
             this.topRank = 0;
-            this.gameStatus = false;
+            this.gameStatus = true;
             this.gravityMode = false;
             this.img = new Image();
             this.img.src = 'img/gameArts.png';
@@ -115,7 +116,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                                     that.player.dieCount++;
                                     break;
                                 default:
-                                    standings.style.display = 'block';
+                                    mask.style.display = 'block';
                                     return 0;
                             }
                             that.player.animation();
@@ -237,6 +238,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }, that.enemy.animationTime);
                 },
                 createEnemy: function createEnemy() {
+                    console.log(_this.gameStatus);
+                    if (!_this.gameStatus) {
+                        return 0;
+                    }
                     var num = Math.floor(Math.random() * 10);
                     if (num === 0 || num === 1 || num === 2 || num === 3 || num === 4 || num === 5 || num === 6) {
                         //出现简单敌人
@@ -268,7 +273,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }
                     setTimeout(function () {
                         that.enemy.createEnemy();
-                    }, 1000);
+                    }, 800);
                 },
                 moveEnemy: function moveEnemy() {
                     for (var i = 0; i < _this.enemy.simpleEnemy.dataPound.length; i++) {
@@ -491,6 +496,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 if (this.isPlayerDie()) {
                     this.player.dieStatus = true;
                     this.player.animation();
+                    this.gameStatus = false;
                     if (!localStorage.getItem('topRank')) {
                         localStorage.setItem('topRank', 0);
                     }
@@ -636,19 +642,39 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var plains = function plains(canvas, ctx) {
         return new Plains(canvas, ctx);
     },
+        gameInfo = null,
         startGame = function startGame() {
         welcome.style.display = 'none';
         canvas.style.display = 'block';
         pause.style.display = 'block';
         var xx = plains(canvas, ctx);
         xx.start();
+        return xx;
     },
         toContinue = function toContinue() {
-        standings.style.display = 'none';
+        mask.style.display = 'none';
         canvas.style.display = 'none';
         pause.style.display = 'none';
         welcome.style.display = 'block';
+    },
+        stopGame = function stopGame() {
+        if (!flag) {
+            //暂停游戏
+            WIN.cancelAnimationFrame(stop);
+            flag = true;
+        } else {
+            //继续游戏
+            gameInfo.start();
+            flag = false;
+        }
     };
-    startBtn.addEventListener('touchstart', startGame, false);
+
+    //开始游戏
+    startBtn.addEventListener('touchstart', function () {
+        gameInfo = startGame();
+    }, false);
+    //返回主菜单
     continueBtn.addEventListener('touchstart', toContinue, false);
+    //暂停游戏
+    pause.addEventListener('touchstart', stopGame, false);
 })(document, window);

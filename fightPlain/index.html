@@ -92,7 +92,16 @@
         #canvas{
             display: none;
         }
-        #standings{
+        #mask{
+            position: absolute;
+            top: 0;
+            width: 100%;
+            left: 0;
+            background-color: rgba(0,0,0,0.5);
+            bottom: 0;
+            display: none;
+        }
+        .standings{
             width: 80%;
             background-color: #ddd;
             text-align: center;
@@ -102,9 +111,8 @@
             border: 2px solid #000;
             border-radius: 5px;
             line-height: 2.5rem;
-            display: none;
         }
-        #standings header{
+        .standings header{
             font-size: 1.2rem;
         }
         #score{
@@ -112,7 +120,7 @@
             border-top: 2px solid #000;
             border-bottom: 2px solid #000;
         }
-        #standings button{
+        .standings button{
             margin: 10px 0;
             padding: 3px 5px 3px 5px;
             border: 2px solid #000;
@@ -127,13 +135,15 @@
     <div id="aboutBtn">About</div>
 </header>
 <div id="pause"></div>
-<div id="standings">
-    <header>游戏分数</header>
-    <div id="score">
-        记录榜:<span id="topRank">0</span><br/>
-        当前分数:<span id="nowRank">0</span>
+<div id="mask">
+    <div class="standings">
+        <header>游戏分数</header>
+        <div id="score">
+            记录榜:<span id="topRank">0</span><br/>
+            当前分数:<span id="nowRank">0</span>
+        </div>
+        <button id="continue">continue</button>
     </div>
-    <button id="continue">continue</button>
 </div>
 <canvas id="canvas"></canvas>
 <script src="result/games.js"></script>

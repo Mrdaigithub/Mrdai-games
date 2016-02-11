@@ -9,11 +9,12 @@
         aboutBtn=  DOC.getElementById('aboutBtn'),
         welcome = DOC.getElementById('welcome'),
         pause = DOC.getElementById('pause'),
-        standings = DOC.getElementById('standings'),
+        mask = DOC.getElementById('mask'),
         topRank = DOC.getElementById('topRank'),
         nowRank = DOC.getElementById('nowRank'),
         continueBtn = DOC.getElementById('continue'),
         pauseStatus = true,
+        flag = false,
         stop = null;
 
     canvas.width = DOC.body.clientWidth;
@@ -45,7 +46,7 @@
             this.ctx = ctx;
             this.nowRank = 0;
             this.topRank = 0;
-            this.gameStatus = false;
+            this.gameStatus = true;
             this.gravityMode = false;
             this.img = new Image();
             this.img.src = 'img/gameArts.png';
@@ -107,7 +108,7 @@
                                     that.player.dieCount++;
                                     break;
                                 default :
-                                    standings.style.display = 'block';
+                                    mask.style.display = 'block';
                                     return 0;
                             }
                             that.player.animation();
@@ -273,6 +274,10 @@
                     },that.enemy.animationTime);
                 },
                 createEnemy:()=>{
+                    console.log(this.gameStatus);
+                    if(!this.gameStatus){
+                        return 0;
+                    }
                     let num = Math.floor(Math.random()*10);
                     if(num===0 || num===1 || num===2 || num===3 || num===4 || num===5 ||num===6){
                         //出现简单敌人
@@ -304,7 +309,7 @@
                     }
                     setTimeout(function () {
                         that.enemy.createEnemy();
-                    },1000)
+                    },800)
                 },
                 moveEnemy:()=>{
                     for(let i=0; i<this.enemy.simpleEnemy.dataPound.length; i++){
@@ -526,6 +531,7 @@
             if(this.isPlayerDie()){
                 this.player.dieStatus = true;
                 this.player.animation();
+                this.gameStatus = false;
                 if(!localStorage.getItem('topRank')){
                     localStorage.setItem('topRank',0);
                 }
@@ -661,6 +667,7 @@
                 this.ctx.textBaseline = "top";
                 this.ctx.fillText("score: " + this.nowRank, 60, 20);
             }
+
         }
 
         main(){
@@ -683,19 +690,40 @@
         }
     }
     let plains = (canvas,ctx) => new Plains(canvas,ctx),
+        gameInfo = null,
         startGame = ()=>{
         welcome.style.display = 'none';
         canvas.style.display = 'block';
         pause.style.display = 'block';
         let xx = plains(canvas,ctx);
         xx.start();
+        return xx;
     },
         toContinue = ()=>{
-            standings.style.display = 'none';
+            mask.style.display = 'none';
             canvas.style.display = 'none';
             pause.style.display = 'none';
             welcome.style.display = 'block';
-        };
-    startBtn.addEventListener('touchstart',startGame,false);
+        },
+        stopGame = ()=>{
+        if(!flag){
+            //暂停游戏
+            WIN.cancelAnimationFrame(stop);
+            flag = true;
+        }else{
+            //继续游戏
+            gameInfo.start();
+            flag = false;
+        }
+    };
+
+    //开始游戏
+    startBtn.addEventListener('touchstart',()=>{
+        gameInfo = startGame();
+    },false);
+    //返回主菜单
     continueBtn.addEventListener('touchstart',toContinue,false);
+    //暂停游戏
+    pause.addEventListener('touchstart',stopGame,false);
+
 })(document,window);
