@@ -140,16 +140,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 //找到第一个未启用的子弹
                 useBullet: function useBullet() {
+                    if (!that.gameStatus) {
+                        return 0;
+                    }
                     for (var i = 0; i < this.dataPound.length; i++) {
                         if (!this.dataPound[i].status) {
                             this.dataPound[i].status = true;
                             this.dataPound[i].x = that.player.x + 33;
-                            setTimeout(function () {
-                                that.bullet.useBullet();
-                            }, that.bullet.interval);
-                            return this.dataPound[i];
+                            break;
                         }
                     }
+                    setTimeout(function () {
+                        that.bullet.useBullet();
+                    }, that.bullet.interval);
                 },
 
                 //移动子弹.
@@ -238,7 +241,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }, that.enemy.animationTime);
                 },
                 createEnemy: function createEnemy() {
-                    console.log(_this.gameStatus);
                     if (!_this.gameStatus) {
                         return 0;
                     }
@@ -422,51 +424,44 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'isEnemyDie',
             value: function isEnemyDie() {
-                var max = { count: null, maxPosY: 10000 },
-                    obj = { bool: false, count: null, levelEnemy: null };
+                var obj = { bool: false, count: null, levelEnemy: null };
 
                 //找到最前方的子弹
                 for (var i = 0; i < this.bullet.dataPound.length; i++) {
-                    if (this.bullet.dataPound[i].status && this.bullet.dataPound[i].y < max.maxPosY) {
-                        max.maxPosY = this.bullet.dataPound[i].y;
-                        max.count = i;
-                    }
-                }
-
-                //检测子弹和敌机的碰撞
-                if (!max.count) {
-                    max.count = 0;
-                }
-                for (var i = 0; i < this.enemy.simpleEnemy.dataPound.length; i++) {
-                    if (this.enemy.simpleEnemy.dataPound[i].dieStatus) {
-                        if (this.bullet.dataPound[max.count].x + 7 > this.enemy.simpleEnemy.dataPound[i].x && this.bullet.dataPound[max.count].x < this.enemy.simpleEnemy.dataPound[i].x + 30 && this.bullet.dataPound[max.count].y < this.enemy.simpleEnemy.dataPound[i].y + 22) {
-                            this.bullet.resetBullet(max.count);
-                            obj.bool = true;
-                            obj.count = i;
-                            obj.levelEnemy = 'simpleEnemy';
-                            return obj;
+                    if (this.bullet.dataPound[i].status) {
+                        //检测子弹和敌机的碰撞
+                        for (var j = 0; j < this.enemy.simpleEnemy.dataPound.length; j++) {
+                            if (this.enemy.simpleEnemy.dataPound[j].dieStatus) {
+                                if (this.bullet.dataPound[i].x + 10 > this.enemy.simpleEnemy.dataPound[j].x && this.bullet.dataPound[i].x < this.enemy.simpleEnemy.dataPound[j].x + 30 && this.bullet.dataPound[i].y < this.enemy.simpleEnemy.dataPound[j].y + 22 && this.bullet.dataPound[i].y + 10 > this.enemy.simpleEnemy.dataPound[j].y) {
+                                    this.bullet.resetBullet(i);
+                                    obj.bool = true;
+                                    obj.count = j;
+                                    obj.levelEnemy = 'simpleEnemy';
+                                    return obj;
+                                }
+                            }
                         }
-                    }
-                }
-                for (var i = 0; i < this.enemy.middleEnemy.dataPound.length; i++) {
-                    if (this.enemy.middleEnemy.dataPound[i].dieStatus) {
-                        if (this.bullet.dataPound[max.count].x + 7 > this.enemy.middleEnemy.dataPound[i].x && this.bullet.dataPound[max.count].x < this.enemy.middleEnemy.dataPound[i].x + 45 && this.bullet.dataPound[max.count].y < this.enemy.middleEnemy.dataPound[i].y + 57) {
-                            this.bullet.resetBullet(max.count);
-                            obj.bool = true;
-                            obj.count = i;
-                            obj.levelEnemy = 'middleEnemy';
-                            return obj;
+                        for (var j = 0; j < this.enemy.middleEnemy.dataPound.length; j++) {
+                            if (this.enemy.middleEnemy.dataPound[j].dieStatus) {
+                                if (this.bullet.dataPound[i].x + 10 > this.enemy.middleEnemy.dataPound[j].x && this.bullet.dataPound[i].x < this.enemy.middleEnemy.dataPound[j].x + 45 && this.bullet.dataPound[i].y < this.enemy.middleEnemy.dataPound[j].y + 57 && this.bullet.dataPound[i].y + 10 > this.enemy.middleEnemy.dataPound[j].y) {
+                                    this.bullet.resetBullet(i);
+                                    obj.bool = true;
+                                    obj.count = j;
+                                    obj.levelEnemy = 'middleEnemy';
+                                    return obj;
+                                }
+                            }
                         }
-                    }
-                }
-                for (var i = 0; i < this.enemy.hardEnemy.dataPound.length; i++) {
-                    if (this.enemy.hardEnemy.dataPound[i].dieStatus) {
-                        if (this.bullet.dataPound[max.count].x + 7 > this.enemy.hardEnemy.dataPound[i].x && this.bullet.dataPound[max.count].x < this.enemy.hardEnemy.dataPound[i].x + 110 && this.bullet.dataPound[max.count].y < this.enemy.hardEnemy.dataPound[i].y + 170) {
-                            this.bullet.resetBullet(max.count);
-                            obj.bool = true;
-                            obj.count = i;
-                            obj.levelEnemy = 'hardEnemy';
-                            return obj;
+                        for (var j = 0; j < this.enemy.hardEnemy.dataPound.length; j++) {
+                            if (this.enemy.hardEnemy.dataPound[j].dieStatus) {
+                                if (this.bullet.dataPound[i].x + 10 > this.enemy.hardEnemy.dataPound[j].x && this.bullet.dataPound[i].x < this.enemy.hardEnemy.dataPound[j].x + 110 && this.bullet.dataPound[i].y < this.enemy.hardEnemy.dataPound[j].y + 170 && this.bullet.dataPound[i].y + 10 > this.enemy.hardEnemy.dataPound[j].y) {
+                                    this.bullet.resetBullet(i);
+                                    obj.bool = true;
+                                    obj.count = j;
+                                    obj.levelEnemy = 'hardEnemy';
+                                    return obj;
+                                }
+                            }
                         }
                     }
                 }
@@ -565,7 +560,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                             if (this.bullet.dataPound[i].y <= 0) {
                                 this.bullet.resetBullet(i);
                             } else {
-                                this.ctx.drawImage(this.img, 0, 730, 10, 10, this.bullet.dataPound[i].x, this.bullet.dataPound[i].y, 7, 12);
+                                this.ctx.drawImage(this.img, 0, 730, 10, 10, this.bullet.dataPound[i].x, this.bullet.dataPound[i].y, 10, 10);
                             }
                         }
                     }
@@ -661,9 +656,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (!flag) {
             //暂停游戏
             WIN.cancelAnimationFrame(stop);
+            gameInfo.gameStatus = false;
             flag = true;
         } else {
             //继续游戏
+            gameInfo.gameStatus = true;
             gameInfo.start();
             flag = false;
         }
