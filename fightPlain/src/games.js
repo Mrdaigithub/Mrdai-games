@@ -512,11 +512,11 @@
         //数据变化
         update(){
             //变化背景数据
-            if(this.bg.bg1.y >= 480){
-                this.bg.bg1.y = -480;
+            if(this.bg.bg1.y >= this.canvas.height){
+                this.bg.bg1.y = -(this.canvas.height);
             }
-            if(this.bg.bg2.y >= 480){
-                this.bg.bg2.y = -480;
+            if(this.bg.bg2.y >= this.canvas.height){
+                this.bg.bg2.y = -(this.canvas.height);
             }
             this.bg.bg1.y += this.bg.speed;
             this.bg.bg2.y += this.bg.speed;
