@@ -370,7 +370,7 @@
         //处理用户输入
         processUserInput(){
 
-            //重力感应模式
+            //重力感应模式(暂未未添加)
             if(this.gravityMode){
                 //addEventListener('deviceorientation',(event)=>{
                 //    let e = WIN.event || event,
